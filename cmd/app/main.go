@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -77,8 +78,14 @@ func main() {
 		})
 	})
 
-	router.Run("localhost:8000")
-
+	srv := http.Server{
+		Addr:           ":8000",
+		Handler:        router,
+		MaxHeaderBytes: 1 << 10,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+	}
+	srv.ListenAndServe()
 }
 
 func getGeneralData(c *gin.Context) {
