@@ -60,7 +60,7 @@ type Bangalore struct {
 
 func main() {
 	router := gin.Default()
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
 	router.Use(cors.Default())
 	router.LoadHTMLGlob("index.html")
 	api := router.Group("/api")
@@ -77,7 +77,7 @@ func main() {
 		})
 	})
 
-	router.Run("8000")
+	router.Run("localhost:8000")
 
 }
 
