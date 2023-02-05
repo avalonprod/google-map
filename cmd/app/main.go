@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -105,6 +106,7 @@ func main() {
 		api.GET("/get-general-data", getGeneralData)
 		api.GET("/get-pages-data", getPagesData)
 		api.PATCH("/update-page-data", updatePageData)
+		api.DELETE("/delete-page-id", deletePage)
 	}
 
 	router.GET("/", func(c *gin.Context) {
@@ -117,6 +119,7 @@ func main() {
 		log.Fatalf("error to connect to mongo db. error %v", err)
 	}
 	collection = db.Collection("dataPages")
+	defer db.Client().Disconnect(context.Background())
 	srv := http.Server{
 		Addr:           ":8000",
 		Handler:        router,
@@ -125,6 +128,22 @@ func main() {
 		// WriteTimeout: 10 * time.Second,
 	}
 	srv.ListenAndServe()
+}
+
+func deletePage(c *gin.Context) {
+	var id string
+	err := c.BindJSON(&id)
+	if err != nil {
+		fmt.Errorf("failed bind id json: %v", err)
+	}
+	objectId, err := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"_id": objectId}
+
+	res, err := collection.DeleteOne(context.Background(), filter)
+	if res.DeletedCount == 0 {
+		fmt.Errorf("not found")
+	}
+	c.IndentedJSON(http.StatusOK, id)
 }
 
 func updatePageData(c *gin.Context) {
@@ -156,12 +175,15 @@ func getGeneralData(c *gin.Context) {
 }
 
 func getPagesData(c *gin.Context) {
-	fmt.Println("req")
-	var allPages = []dtoPageGet{}
+	var allPages []dtoPageGet
 	var result dtoPageGet
+	ctx, err := context.WithTimeout(c.Request.Context(), 30*time.Second)
+	if err != nil {
+		fmt.Errorf("failed to create context")
+	}
+	cur, _ := collection.Find(ctx, bson.D{})
+	for cur.Next(ctx) {
 
-	cur, _ := collection.Find(context.Background(), bson.D{})
-	for cur.Next(context.Background()) {
 		err := cur.Decode(&result)
 		if err != nil {
 			log.Fatalf("failed to decode data page. error: %v", err)
@@ -173,10 +195,9 @@ func getPagesData(c *gin.Context) {
 	if err := cur.Err(); err != nil {
 		log.Fatalf("failed error: %v", err)
 	}
-	cur.Close(context.Background())
+	cur.Close(ctx)
 
 	c.IndentedJSON(http.StatusOK, allPages)
-	fmt.Println(result)
 
 }
 
