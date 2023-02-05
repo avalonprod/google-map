@@ -1,468 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        * {
-            box-sizing: border-box;
-        }
-        h2, h3{
-            margin: 0;
-        }
-        body{
-            color: #000;
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-        }
-        .wrapper{
-            padding: 30px 0px;
-            max-width: 1300px;
-            height: 100vh;
+      * {
+        box-sizing: border-box;
+      }
 
-            box-shadow: 0px 0px 35px rgb(224, 224, 224);
-            border-radius: 15px;
-            margin: 40px auto 0 auto;
+      .list {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
 
-        }
+      .list div {
+        display: flex;
+        flex-direction: row;
+      }
 
-        ul{
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        li{
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 0 80px 0 40px;
-        }
-        li input{
-            border: 1px solid rgb(209, 209, 209);
-            border-radius: 5px;
-            height: 40px;
-            font-size: 16px;
-            padding: 5px 14px;
-            font-family: inherit;
-        }
-        .descr__wrapper{
-            width: 50%;
-        }
-        .descr{
-            width: 100%;
-        }
+      .list .item {
+        list-style: none;
+        display: flex;
+        gap: 5px;
+      }
+      .list .item input {
+        border: 1px solid rgb(209, 209, 209);
+        height: 30px;
+        width: 240px;
+        border-radius: 5px;
+        padding: 3px 10px;
+      }
+      .add__item-button {
+        width: 90px;
+        height: 30px;
+        background-color: transparent;
+        color: darkgreen;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid darkgreen;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .add__item-button:hover {
+        background-color: rgba(0, 128, 0, 0.356);
+      }
+      .list__item-btn {
+        width: 90px;
+        height: 30px;
+        background: transparent;
 
-        .qty__wrapper{
-            width: 50%;
-        }
-        .qty{
-            width: 100%;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
 
-        }
+      .edit {
+        border: 1px solid blue;
+        color: darkblue;
+        display: none;
+      }
 
-        .add__material{
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: inherit;
-            color: rgb(6, 172, 130);
-            font-weight: 500;
-            font-size: 17px;
-            margin-top: 25px;
-            padding: 0 0 0 40px;
-            cursor: pointer;
-            max-width: 300px;
-        }
-        .icons{
-            display: none;
-            flex-direction: column;
-            margin: 0 0 0 auto;
-        }
-        .icon{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 6px;
-            width: 27px;
-            height: 27px;
-            border: 1px solid rgb(202, 202, 202);
-            border-radius: 3px;
-        }
-        .icon img{
-            width: 100%;
-            height: 100%;
-        }
-        .add__material-plus{
-            display: flex;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background-color: rgba(3, 175, 104, 0.178);
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            font-weight: bolder;
-            color: rgb(6, 172, 130);
-            line-height: 9px;
-        }
-        .label{
-            display: none;
-        }
+      .edit.active {
+        display: block;
+      }
+      .edit:hover {
+        background: rgba(0, 0, 255, 0.356);
+      }
 
-        .item-link {
-            height: 50px;
-            background-color: rgb(228, 228, 228);
-            margin-top: 5px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 20px;
-        }
+      .delete {
+        border: 1px solid darkred;
+        color: darkred;
+      }
+      .delete:hover {
+        background: rgba(139, 0, 0, 0.356);
+      }
 
-        .error {
+      .save {
+        border: 1px solid green;
+        color: darkgreen;
+        display: none;
+      }
 
-            height: 50px;
-            padding: 5px;
-            display: none;
-            align-items: center;
-            background-color: rgb(218, 99, 99);
-            color: #fff;
-            margin: 0 30px 0 30px;
-            border-radius: 10px;
-            padding: 1px 30px;
+      .save.active {
+        display: block;
+      }
+      .save:hover {
+        background: rgba(0, 128, 0, 0.356);
+      }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
 
-        }
+      code {
+        font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+          monospace;
+      }
 
-        .error.active {
-            display: flex;
-        }
-
-        .general .inp__wrapper {
-            width: 100%;
-        }
-
-        .general .inp__wrapper input {
-            width: 100%;
-        }
-
-        .bangalore .inp__wrapper {
-            width: 100%;
-        }
-        .bangalore .inp__wrapper input {
-            width: 100%;
-        }
-
-        .popup .inp__wrapper {
-            width: 100%;
-        }
-
-        .popup .inp__wrapper input {
-            width: 100%;
-        }
-        @media (max-width: 991px) {
-
-            .wrapper{
-                width: 100%;
-                height: 100vh;
-                border-radius: 0;
-                margin: 0;
-            }
-
-            ul{
-                gap: 7px;
-            }
-            li{
-                flex-wrap: wrap;
-                gap: 5px;
-                border-bottom: 1px solid rgba(184, 184, 184, .1);
-                padding: 0 30px 15px;
-            }
-            li input{
-                height: 50px;
-                font-size: 14px;
-                padding: 25px 12px 7px 12px ;
-                font-weight: 700;
-            }
-            .inp__wrapper{
-                position: relative;
-            }
-            .descr__wrapper{
-                width: 100%;
-            }
-            .descr{
-                width: 100%;
-                height: 45px;
-            }
-            .qty{
-                text-align: left;
-                width: 60px;
-            }
-
-            .add__material{
-                padding: 0 0 0 70px;
-            }
-
-            .descr-label{
-                left: 12px;
-            }
-            .markup-label{
-                left: 7px;
-            }
-            .total-label{
-                left: 0;
-                top: 5px;
-            }
-            .add__material{
-                padding: 0 30px;
-            }
-        }
-        @media (max-width:730px) {
-            .icons{
-                flex-direction: row;
-                gap: 7px;
-                margin-top: 27px;
-            }
-        }
-        @media (max-width: 600px) {
-
-            li{
-                padding: 0 15px 7px;
-            }
-            .qty__wrapper, .unit__type_wrapper, .cost__wrapper, .markap__wrapper{
-                width: calc(25% - 4px);
-                min-width: 90px;
-            }
-            .qty, .unit__type, .cost, .markup{
-                width: 100%;
-                font-size: 13px;
-            }
-            .descr{
-                font-size: 13px;
-            }
-
-            .add__material{
-                padding: 0 7px;
-            }
-            .icons{
-                margin-top: 10px;
-            }
-        }
-        @media (max-width: 420px) {
-
-            li{
-                padding: 0 7px 5px;
-            }
-            .qty__wrapper, .unit__type_wrapper, .cost__wrapper, .markap__wrapper{
-                width: calc(33% - 3px);
-            }
-            .icons{
-                flex-direction: column;
-                gap: 0;
-                margin-top: 0;
-            }
-        }
-        @media (max-width: 310px) {
-            li{
-                padding: 0 7px 5px;
-                justify-content: space-between;
-            }
-
-        }
-        ::-webkit-input-placeholder {
-            color: rgb(184, 184, 184);
-        }
-        :-moz-placeholder {
-            color: rgb(184, 184, 184);
-        }
-        ::-moz-placeholder {
-            color: rgb(184, 184, 184);
-        }
-        :-ms-input-placeholder {
-            color: rgb(184, 184, 184);
-        }
+      .list-wrapper {
+        display: flex;
+        flex-direction: column-reverse;
+      }
     </style>
-</head>
-<body>
-<div class="wrapper">
-    <div class="top">
-        <div class="top-text">
-            <h1 class="top-title">Add page</h1>
-        </div>
+  </head>
+  <body>
+    <div class="list__item">
+      <ul class="list"></ul>
     </div>
-    <form action="">
 
-        <ul class="general">
-            <li class="general-item">
-                <div class="href-wrapper inp__wrapper">
-                    <input type="text" class="href" id="href" placeholder="href" name="href">
-                </div>
+    <div class="add__item">
+      <form action="" class="form">
+        <ul class="list">
+          <div>
+            <li class="item">
+              <input type="text" id="href" placeholder="href" name="href" />
             </li>
-            <li class="general-item">
-                <div class="url-img-marker-wrapper inp__wrapper">
-                    <input type="text" class="url-img-marker" id="url-img-marker" placeholder="url img marker" name="url-img-marker">
-                </div>
+            <li class="item">
+              <input
+                type="text"
+                id="url-marker"
+                placeholder="url-marker"
+                name="urlMarker"
+              />
             </li>
+            <li class="item">
+              <input type="text" id="title" placeholder="title" name="title" />
+            </li>
+            <li class="item">
+              <input type="text" id="text" placeholder="text" name="text" />
+            </li>
+            <li class="item">
+              <input
+                type="text"
+                id="url-img"
+                placeholder="url-img"
+                name="urlImg"
+              />
+            </li>
+            <li class="item">
+              <input type="number" id="lat" placeholder="lat" name="lat" />
+            </li>
+            <li class="item">
+              <input type="number" id="lng" placeholder="lng" name="lng" />
+            </li>
+            <li class="item">
+              <input type="text" id="name" placeholder="name" name="name" />
+            </li>
+            <li class="item">
+              <input type="text" id="url" placeholder="url" name="url" />
+            </li>
+            <li class="item">
+              <button class="add__item-button">Save</button>
+            </li>
+          </div>
         </ul>
-        <ul class="bangalore">
+      </form>
+    </div>
 
-            <li class="bangalore-item">
-                <div class="lat__wrapper inp__wrapper">
-                    <input type="text" class="lat" id="lat" placeholder="lat" name="lat">
-                </div>
-                <div class="lng__wrapper inp__wrapper">
-                    <input type="text" class="lng" id="lng" placeholder="lng" name="lng">
-                </div>
+    <script>
+      const form = document.querySelector(".form");
+
+      const href = form.querySelector("#href");
+      const urlMarker = form.querySelector("#url-marker");
+      const title = form.querySelector("#title");
+      const text = form.querySelector("#text");
+      const urlImg = form.querySelector("#url-img");
+      const lat = form.querySelector("#lat");
+      const lng = form.querySelector("#lng");
+      const addItemButton = form.querySelector(".add__item-button");
+
+
+ 
+
+      const list = document.querySelector(".list");
+      let disabled = false;
+      function updateList(data) {
+        data.forEach((item) => {
+      
+          list.innerHTML += `
+            <div>
+        <li class="item">
+                <input type="text" 
+                    id="hrefPage"
+                    value="${item.href}"
+                    ${disabled ? "disabled" : ""}
+                    name='href'
+                
+                />
             </li>
-        </ul>
-        <h2>Popup data</h2>
-        <ul class="popup">
-            <li class="popup-item">
-                <div class="title-wrapper inp__wrapper">
-                    <input type="text" class="title" id="title" placeholder="title" name="title">
-                </div>
+            <li class="item">
+                <input type="text" 
+                id="urlMarkerPage"
+                    value=${item.urlImgMarker}
+                    ${disabled ? "disabled" : ""}
+                    name='urlMarker'
+            
+                />
             </li>
-            <li class="popup-item">
-                <div class="text-wrapper inp__wrapper">
-                    <input type="text" class="text" id="text" placeholder="text" name="text">
-                </div>
+            <li class="item">
+                <input type="text" 
+                id="titlePage"
+                    value=${item.dataPopup.title}
+                    ${disabled ? "disabled" : ""}
+                    name='title'
+                
+                />
             </li>
-            <li class="url-img-item">
-                <div class="url-img inp__wrapper">
-                    <input type="text" class="url-img" id="url-img" placeholder="url img" name="url-img">
-                </div>
+            <li class="item">
+                <input type="text" 
+                id="textPage"
+                    value=${item.dataPopup.text}
+                    ${disabled ? "disabled" : ""}
+                    name='text'
+               
+                />
             </li>
-        </ul>
-        <h3 class="title">Lnks</h3>
-        <ul class="links">
-            <div class="error">Input name and input url cannot be empty.</div>
-            <li class="link-item">
-                <div class="descr__wrapper inp__wrapper">
-                    <input type="text" class="descr" id="name" placeholder="name" name="name">
-                </div>
-                <div class="qty__wrapper inp__wrapper">
-                    <input type="text" class="url" id="url" placeholder="url" name="url">
-                </div>
+            <li class="item">
+               
+                <input type="text" 
+                id="urlImgPage"
+                    value=${item.dataPopup.urlImg}
+                    ${disabled ? "disabled" : ""}
+                    name='urlImg'
+            
+                />
             </li>
-        </ul>
-        <div class="add__material"><span class="add__material-plus">+</span> Add material row</div>
-        <ul class="list-link">
+            <li class="item">
+               
+                <input type="number"
+                id="latPage"
+                ${disabled ? "disabled" : ""}
+                    name='lat'
+           
+                    value=${item.bangalore.lat}
+                />
+            </li>
+            <li class="item">
+                
+                <input type="number" 
+                id="lngPage"
+                    value=${item.bangalore.lat}
+                    ${disabled ? "disabled" : ""}
+                    name='lng'
+          
+                />
+            </li>
+            <li class="item">
+                <input type="text" 
+                    value='sdf'
+                    ${disabled ? "disabled" : ""}
+                    name=''
+                
+                />
+            </li>
+            <li class="item">
+                <input type="text" 
+                    value='sdf'
+                    ${disabled ? "disabled" : ""}
+                    name=''
+                
+                />
+            </li>
+            <li class='item'>
+                <button class='edit list__item-btn active'
+                   
+             
+         
+                >Edit</button>
+                <button class='save list__item-btn active'
+                    
+             
+            
+                >Save</button>
+                <button class="delete list__item-btn"
+            
+                >
+                    Delete
+                </button>
+            </li>
+            </div>
+        `;
+        redyRender(data)
+        });
+      }
 
-        </ul>
-        <button class="button-save">Save</button>
-    </form>
+     async function getAllPagesReq() {
+       await fetch("http://localhost:8000/api/get-pages-data")
+          .then((data) => data.json())
+          .then((res) => updateList(res));
+      }
 
+      async function postPageReq(data) {
+        return fetch(
+          "https://google-map-prod.onrender.com/api/post-pages-data",
+          {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+          }
+        ).then((res) => getAllPagesReq());
+      }
+      getAllPagesReq();
 
-
-</div>
-<script>
-    const listLink = document.querySelector(".list-link")
-
-    const linkName = document.querySelector(".link-item #name")
-    const linkUrl = document.querySelector(".link-item #url")
-
-    const addMaterial = document.querySelector(".add__material")
-
-    const error = document.querySelector(".error")
-
-    const buttonSave = document.querySelector(".button-save")
-
-
-    const href = document.querySelector("#href")
-    const urlImgMarker = document.querySelector("#url-img-marker")
-    const lat = document.querySelector("#lat")
-    const lng = document.querySelector("#lng")
-    const title = document.querySelector("#title")
-    const text = document.querySelector("#text")
-    const urlImg = document.querySelector("#url-img")
-
-
-    let pages = {
-        href: "",
-        urlImgMarker: "",
-
-        bangalore: {
+      async function updatePageReq(data) {
+        await fetch(
+          "http://localhost:8000/api/update-page-data",
+          {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+              "Accept": "*/*"
+            },
+          }
+        ).then((res) => res)
+        .then(data => data);
+        console.log(data)
+      
+      }
+      addItemButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        let page = {
+          href: "",
+          urlImgMarker: "",
+          bangalore: {
             lat: 0,
             lng: 0,
-        },
-        id: 0,
-        dataPopup: {
+          },
+          dataPopup: {
             title: "",
             text: "",
             urlImg: "",
             links: [
+              {
+                name: "ds",
+                url: "dfs",
+              },
+            ],
+          },
+        };
 
-            ]
-        }
+        let hrefValue = href.value;
+        let urlMarkerValue = urlMarker.value;
+        let titleValue = title.value;
+        let textValue = text.value;
+        let urlImgValue = urlImg.value;
+        let latValue = lat.value;
+        let lngValue = lng.value;
+        page.href = hrefValue;
+        page.urlImgMarker = urlMarkerValue;
+        page.bangalore.lat = +latValue;
+        page.bangalore.lng = +lngValue;
+        page.dataPopup.title = titleValue;
+        page.dataPopup.text = textValue;
+        page.dataPopup.urlImg = urlImgValue;
+        postPageReq(page)
+        
+      });
 
-    }
-
-    buttonSave.addEventListener("click", (e) => {
-        e.preventDefault()
-        let hrefValue = href.value
-        let urlImgMarkerValue = urlImgMarker.value
-        let latValue = lat.value
-        let lngValue = lng.value
-        let titleValue = title.value
-        let textValue = text.value
-        let urlImgValue = urlImg.value
-
-        pages.href = hrefValue
-        pages.urlImgMarker = urlImgMarkerValue
-        pages.bangalore.lat = +latValue
-        pages.bangalore.lng = +lngValue
-        pages.dataPopup.title = titleValue
-        pages.dataPopup.text = textValue
-        pages.dataPopup.urlImg = urlImgValue
-
-        addPagesRequest(pages)
-
-    })
-
-    function addPagesRequest(data) {
-        return fetch("https://google-map-prod.onrender.com/api/post-pages-data", {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        }).then((res) => res)
-    }
+      function redyRender(data) {
+       
+        const hrefPage = document.querySelector("#hrefPage");
+      const urlMarkerPage = document.querySelector("#urlMarkerPage");
+      const titlePage = document.querySelector("#titlePage");
+      const textPage = document.querySelector("#textPage");
+      const urlImgPage = document.querySelector("#urlImgPage");
+      const latPage = document.querySelector("#latPage");
+      const lngPage = document.querySelector("#lngPage");
 
 
-    addMaterial.addEventListener("click", () => {
-        let name = linkName.value
-        let url = linkUrl.value
-        if( name == "" || url == "") {
-            error.classList.add("active")
+        const buttonEdit = document.querySelectorAll(".edit");
+        const buttonSave = document.querySelectorAll(".save");
 
-        } else {
-            error.classList.remove("active")
-            pages.dataPopup.links.push({
-                name: name,
-                url: url,
+   
+        buttonSave.forEach((item, i) => {
+            buttonSave[i].addEventListener("click", () => {
+
+                let page = {
+                id: data[i].id,
+                href: "",
+                urlImgMarker: "",
+                bangalore: {
+                lat: 0,
+                lng: 0,
+                },
+                dataPopup: {
+                title: "",
+                text: "",
+                urlImg: "",
+                links: [
+                    {
+                    name: "ds",
+                    url: "dfs",
+                    },
+                ],
+                },
+            };
+
+        let hrefValue = hrefPage.value;
+        let urlMarkerValue = urlMarkerPage.value;
+        let titleValue = titlePage.value;
+        let textValue = textPage.value;
+        let urlImgValue = urlImgPage.value;
+        let latValue = latPage.value;
+        let lngValue = lngPage.value;
+        page.href = hrefValue;
+        page.urlImgMarker = urlMarkerValue;
+        page.bangalore.lat = +latValue;
+        page.bangalore.lng = +lngValue;
+        page.dataPopup.title = titleValue;
+        page.dataPopup.text = textValue;
+        page.dataPopup.urlImg = urlImgValue;
+
+                console.log(data[i])
+                updatePageReq(page)
+                console.log(page)
             })
-
-            listLink.innerHTML = ""
-
-            pages.dataPopup.links.forEach(item => {
-                listLink.innerHTML += `
-                <li class="item-link">
-                    <div class="name">${item.name}</div>
-                    <div class="name">${item.url}</div>
-                </li>
-            `
-            })
-
-        }
-
-    })
-</script>
-</body>
+        })
+        // buttonEdit.forEach((item, i) => {
+         
+        //   item.addEventListener("click", () => {
+        //     disabled = false;
+          
+        //     item.classList.remove("active");
+        //     buttonSave[i].classList.add("active");
+            
+        //   });
+        // });
+      }
+    </script>
+  </body>
 </html>

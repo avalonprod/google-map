@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -38,6 +38,7 @@ type DataMap struct {
 }
 
 type Page struct {
+	Id           string `json:"id" bson:"_id,omitempty"`
 	Href         string `json:"href" bson:"href"`
 	UrlImgMarker string `json:"urlImgMarker" bson:"urlImgMarker"`
 	Bangalore    `json:"bangalore" bson:"bangalore"`
@@ -59,6 +60,39 @@ type Bangalore struct {
 	Lng int `json:"lng" bson:"lng"`
 }
 
+type dtoPagePost struct {
+	Href         string `json:"href" bson:"href"`
+	UrlImgMarker string `json:"urlImgMarker" bson:"urlImgMarker"`
+	Bangalore    `json:"bangalore" bson:"bangalore"`
+	DataPopup    `json:"dataPopup" bson:"dataPopup"`
+}
+
+type dtoPageGet struct {
+	Id           string `json:"id" bson:"_id,omitempty"`
+	Href         string `json:"href" bson:"href"`
+	UrlImgMarker string `json:"urlImgMarker" bson:"urlImgMarker"`
+	Bangalore    `json:"bangalore" bson:"bangalore"`
+	DataPopup    `json:"dataPopup" bson:"dataPopup"`
+}
+
+type dtoPageUpdate struct {
+	Id           string `json:"id" bson:"_id,omitempty"`
+	Href         string `json:"href" bson:"href"`
+	UrlImgMarker string `json:"urlImgMarker" bson:"urlImgMarker"`
+	Bangalore    `json:"bangalore" bson:"bangalore"`
+	DataPopup    `json:"dataPopup" bson:"dataPopup"`
+}
+
+type database struct {
+	db *mongo.Database
+}
+
+func newDatabase(db *mongo.Database) *database {
+	return &database{db: db}
+}
+
+var collection *mongo.Collection
+
 func main() {
 	router := gin.Default()
 	gin.SetMode(gin.DebugMode)
@@ -70,6 +104,7 @@ func main() {
 		api.POST("/post-pages-data", postPagesData)
 		api.GET("/get-general-data", getGeneralData)
 		api.GET("/get-pages-data", getPagesData)
+		api.PATCH("/update-page-data", updatePageData)
 	}
 
 	router.GET("/", func(c *gin.Context) {
@@ -77,15 +112,43 @@ func main() {
 			"title": "Main website",
 		})
 	})
-
+	db, err := newClient(context.TODO(), "boss", "amurasila", "googleMap")
+	if err != nil {
+		log.Fatalf("error to connect to mongo db. error %v", err)
+	}
+	collection = db.Collection("dataPages")
 	srv := http.Server{
 		Addr:           ":8000",
 		Handler:        router,
 		MaxHeaderBytes: 1 << 10,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
+		// ReadTimeout:    10 * time.Second,
+		// WriteTimeout: 10 * time.Second,
 	}
 	srv.ListenAndServe()
+}
+
+func updatePageData(c *gin.Context) {
+	var page dtoPageUpdate
+
+	if err := c.BindJSON(&page); err != nil {
+		return
+	}
+	id, err := primitive.ObjectIDFromHex(page.Id)
+	if err != nil {
+		log.Fatalf("failed to convert hext to object id. error: %v", err)
+	}
+	fmt.Println(id)
+	filter := bson.M{"_id": id}
+
+	pageBytes, err := bson.Marshal(page)
+	var updadtePageObj bson.M
+	err = bson.Unmarshal(pageBytes, &updadtePageObj)
+	delete(updadtePageObj, "_id")
+	update := bson.M{
+		"$set": updadtePageObj,
+	}
+	collection.UpdateOne(context.Background(), filter, update)
+	c.IndentedJSON(http.StatusCreated, page)
 }
 
 func getGeneralData(c *gin.Context) {
@@ -93,18 +156,13 @@ func getGeneralData(c *gin.Context) {
 }
 
 func getPagesData(c *gin.Context) {
-	var allPages = []Page{}
-	var result Page
-	db, err := newClient(context.TODO(), "boss", "amurasila", "googleMap")
-	if err != nil {
-		log.Fatalf("failed to connect to mongo db")
-	}
+	fmt.Println("req")
+	var allPages = []dtoPageGet{}
+	var result dtoPageGet
 
-	collection := db.Collection("dataPages")
-
-	cur, err := collection.Find(context.Background(), bson.D{})
+	cur, _ := collection.Find(context.Background(), bson.D{})
 	for cur.Next(context.Background()) {
-		err = cur.Decode(&result)
+		err := cur.Decode(&result)
 		if err != nil {
 			log.Fatalf("failed to decode data page. error: %v", err)
 		}
@@ -115,7 +173,7 @@ func getPagesData(c *gin.Context) {
 	if err := cur.Err(); err != nil {
 		log.Fatalf("failed error: %v", err)
 	}
-	cur.Close(context.TODO())
+	cur.Close(context.Background())
 
 	c.IndentedJSON(http.StatusOK, allPages)
 	fmt.Println(result)
@@ -134,24 +192,17 @@ func postGeneralData(c *gin.Context) {
 }
 
 func postPagesData(c *gin.Context) {
-	var page Page
+	var page dtoPagePost
 
 	if err := c.BindJSON(&page); err != nil {
 		return
 	}
-	db, err := newClient(context.TODO(), "boss", "amurasila", "googleMap")
-	if err != nil {
-		log.Fatalf("error to connect to mongo db. error %v", err)
-	}
-
-	collection := db.Collection("dataPages")
 	res, err := collection.InsertOne(context.TODO(), page)
 	if err != nil {
 		log.Fatalf("failed to create page. error: %v", err)
 	}
-	fmt.Println(res)
-	fmt.Println(page)
-	c.IndentedJSON(http.StatusCreated, page)
+
+	c.IndentedJSON(http.StatusCreated, res)
 }
 
 func newClient(ctx context.Context, username, password, database string) (*mongo.Database, error) {
@@ -167,5 +218,6 @@ func newClient(ctx context.Context, username, password, database string) (*mongo
 	if err != nil {
 		log.Fatalf("failed to ping to mongodb: %v", err)
 	}
+
 	return client.Database(database), err
 }
