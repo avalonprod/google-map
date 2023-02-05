@@ -57,8 +57,8 @@ type Link struct {
 	Name string `json:"name" bson:"name"`
 }
 type Bangalore struct {
-	Lat int `json:"lat" bson:"lat"`
-	Lng int `json:"lng" bson:"lng"`
+	Lat float64 `json:"lat" bson:"lat"`
+	Lng float64 `json:"lng" bson:"lng"`
 }
 
 type dtoPagePost struct {
