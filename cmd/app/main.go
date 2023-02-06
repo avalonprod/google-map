@@ -56,7 +56,7 @@ type DataPopup struct {
 type Link struct {
 	Url    string `json:"url" bson:"url"`
 	Name   string `json:"name" bson:"name"`
-	linkId string `json:"linkId" bson:"linkId"`
+	LinkId string `json:"linkId" bson:"linkId"`
 }
 type Bangalore struct {
 	Lat float64 `json:"lat" bson:"lat"`
@@ -140,6 +140,14 @@ func main() {
 		fmt.Println(err)
 	}
 }
+
+// func updateLink() {
+// 	ctx, _ := context.WithTimeout(c.Request.Context(), 30*time.Second)
+// 	id := 0
+// 	filter := bson.M{"linkId": id}
+
+// 	collection.UpdateOne(ctx, filter)
+// }
 
 func deletePage(c *gin.Context) {
 
@@ -234,8 +242,8 @@ func postPagesData(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	c.IndentedJSON(http.StatusCreated, res)
+	fmt.Println(res)
+	c.IndentedJSON(http.StatusCreated, page)
 }
 
 func newClient(ctx context.Context, username, password, database string) (*mongo.Database, error) {
