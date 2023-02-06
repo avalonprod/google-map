@@ -86,14 +86,6 @@ type dtoPageUpdate struct {
 	DataPopup    DataPopup `json:"dataPopup" bson:"dataPopup"`
 }
 
-type database struct {
-	db *mongo.Database
-}
-
-func newDatabase(db *mongo.Database) *database {
-	return &database{db: db}
-}
-
 var collection *mongo.Collection
 
 func main() {
@@ -141,14 +133,6 @@ func main() {
 	}
 }
 
-// func updateLink() {
-// 	ctx, _ := context.WithTimeout(c.Request.Context(), 30*time.Second)
-// 	id := 0
-// 	filter := bson.M{"linkId": id}
-
-// 	collection.UpdateOne(ctx, filter)
-// }
-
 func deletePage(c *gin.Context) {
 
 	var id string
@@ -162,6 +146,7 @@ func deletePage(c *gin.Context) {
 	res, err := collection.DeleteOne(context.Background(), filter)
 	if res.DeletedCount == 0 {
 		fmt.Println("not fauld")
+		c.IndentedJSON(http.StatusNotFound, id)
 	}
 	c.IndentedJSON(http.StatusOK, id)
 }
@@ -243,7 +228,7 @@ func postPagesData(c *gin.Context) {
 		fmt.Println(err)
 	}
 	fmt.Println(res)
-	c.IndentedJSON(http.StatusCreated, page)
+	c.IndentedJSON(http.StatusCreated, res)
 }
 
 func newClient(ctx context.Context, username, password, database string) (*mongo.Database, error) {

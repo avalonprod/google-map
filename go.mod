@@ -3,6 +3,7 @@ module github.com/ElITEZONE/SET_MAP
 go 1.19
 
 require (
+	github.com/avalonprod/in-memory-cash v0.0.0-20230104024812-668147bed4b5 // indirect
 	github.com/gin-contrib/cors v1.4.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.8.2 // indirect

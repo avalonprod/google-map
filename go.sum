@@ -1,3 +1,5 @@
+github.com/avalonprod/in-memory-cash v0.0.0-20230104024812-668147bed4b5 h1:SlTsMFf2BiL5SIo1RW7jXmeAKNym6ySteQhHFGyUwUI=
+github.com/avalonprod/in-memory-cash v0.0.0-20230104024812-668147bed4b5/go.mod h1:s9eu08CGa2Opp54GWmsFfbVuVXKwwh1ShByROF1t6o4=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
