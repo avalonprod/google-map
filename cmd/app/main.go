@@ -181,21 +181,21 @@ func getGeneralData(c *gin.Context) {
 
 func getPagesData(c *gin.Context) {
 	var allPages []dtoPageGet
-	var result dtoPageGet
+	// var result dtoPageGet
 	ctx, err := context.WithTimeout(c.Request.Context(), 30*time.Second)
 	if err != nil {
 		fmt.Println(err)
 	}
 	cur, _ := collection.Find(ctx, bson.D{})
-	for cur.Next(ctx) {
-
-		err := cur.Decode(&result)
-		if err != nil {
-			fmt.Println(err)
-		}
-		allPages = append(allPages, result)
-
+	// for cur.Next(ctx) {
+	cur.All(ctx, &allPages)
+	// err := cur.Decode(&result)
+	if err != nil {
+		fmt.Println(err)
 	}
+	// allPages = append(allPages, result)
+
+	// }
 
 	if err != nil {
 		fmt.Println(err)
