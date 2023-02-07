@@ -232,7 +232,7 @@ func postPagesData(c *gin.Context) {
 }
 
 func newClient(ctx context.Context, username, password, database string) (*mongo.Database, error) {
-	mongoDBURL := fmt.Sprintf("mongodb+srv://%s:%s@keyspassmap.avbtuqx.mongodb.net/test", username, password)
+	mongoDBURL := fmt.Sprintf("mongodb+srv://%s:%s@cluster0.mgdx7q8.mongodb.net/?retryWrites=true&w=majority", username, password)
 	clientOptions := options.Client().ApplyURI(mongoDBURL)
 
 	client, err := mongo.Connect(ctx, clientOptions)
