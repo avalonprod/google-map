@@ -65,6 +65,7 @@ type Bangalore struct {
 }
 
 type dtoPagePost struct {
+	Private      bool   `json:"private" bson:"private"`
 	Href         string `json:"href" bson:"href"`
 	UrlImgMarker string `json:"urlImgMarker" bson:"urlImgMarker"`
 	Bangalore    `json:"bangalore" bson:"bangalore"`
