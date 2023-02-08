@@ -41,6 +41,7 @@ type DataMap struct {
 
 type Page struct {
 	Id           string `json:"id" bson:"_id,omitempty"`
+	Private      bool   `json:"private" bson:"private"`
 	Href         string `json:"href" bson:"href"`
 	UrlImgMarker string `json:"urlImgMarker" bson:"urlImgMarker"`
 	Bangalore    `json:"bangalore" bson:"bangalore"`
